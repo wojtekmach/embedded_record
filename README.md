@@ -31,7 +31,7 @@ Color.first
 Color.last
 
 blue = Color.find(:blue)
-puts blue.id    # => :blue
+p blue.id    # => :blue
 
 p blue.index # => 2
 p blue.name  # => "Blue"
@@ -77,7 +77,7 @@ None
 
 ## INSTALL:
 
-* `gem install embedded\_record`
+* `gem install embedded_record`
 
 ## LICENSE:
 
