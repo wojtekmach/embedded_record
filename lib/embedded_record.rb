@@ -10,9 +10,7 @@ module EmbeddedRecord
   #   - :class - Class to embed
   #   - :scope - Boolean wheter to install ActiveRecord scope
   def embed_record(name, options = {})
-    raise ArgumentError, "Option :class is required" unless options[:class]
-
-    klass = options[:class]
+    klass = options[:class] || EmbeddedRecord.constantize(name)
     attr = "#{name}_mask"
     all = klass.all
 
@@ -52,12 +50,8 @@ module EmbeddedRecord
   #   end
   #
   def embed_records(name, options = {})
-    [:class, :singular].each do |opt|
-      raise ArgumentError, "Option :#{opt} is required" unless options[opt]
-    end
-
-    singular = options[:singular]
-    klass = options[:class]
+    singular = options[:singular] || EmbeddedRecord.singularize(name)
+    klass = options[:class] || EmbeddedRecord.constantize(singular)
     all_ids = klass.all.map { |obj| obj.id }
     attr = "#{name}_mask"
 
@@ -86,22 +80,20 @@ module EmbeddedRecord
   end
 
   def embed_record_scope(name)
-    klass = name.to_s.classify.constantize
-    plural = name.to_s.pluralize
+    klass = EmbeddedRecord.constantize(name)
 
-    send :scope, :"with_#{name.to_s.tableize}", lambda { |*ids|
+    send :scope, :"with_#{name}", lambda { |*ids|
       masks = ids.map { |id| klass.find(id).index }
-      where("#{plural}_mask in (?)", masks)
+      where("#{name}_mask in (?)", masks)
     }
   end
 
   def embed_records_scope(name)
-    klass = name.to_s.classify.constantize
-    plural = name.to_s.pluralize
+    klass = EmbeddedRecord.constantize(name)
 
-    send :scope, :"with_#{name.to_s.tableize}", lambda { |*ids|
+    send :scope, :"with_#{name}", lambda { |*ids|
       masks = ids.map { |id| 2 ** klass.find(id).index }.join(" | ")
-      where("#{plural}_mask & (?)", masks)
+      where("#{name}_mask & (?)", masks)
     }
   end
 
@@ -109,6 +101,32 @@ private
 
   def embed_id_type_method(klass)
     klass.ids.first.is_a?(Symbol) ? :to_sym : :to_s
+  end
+
+  def self.constantize(str)
+    if defined?(ActiveSupport::Inflector)
+      return ActiveSupport::Inflector.constantize(str)
+    end
+
+    # Stolen from ActiveSupport::Inflector
+    cls = str.to_s.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase }
+    Kernel.const_get(cls)
+  end
+
+  def self.singularize(str)
+    if defined?(ActiveSupport::Inflector)
+      return ActiveSupport::Inflector.singularize(str)
+    end
+
+    str.to_s[0..-2]
+  end 
+ 
+  def self.pluralize(str)
+    if defined?(ActiveSupport::Inflector)
+      return ActiveSupport::Inflector.pluralize(str)
+    end
+
+    str.to_s + "s"
   end
 end
 

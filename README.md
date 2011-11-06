@@ -48,7 +48,7 @@ Embedding record:
 class Car
   attr_accessor :color_mask # integer id of a record
   include EmbeddedRecord
-  embed_record :color, :class => Color
+  embed_record :color
 end
 
 car = Car.new
@@ -63,7 +63,7 @@ Embedding records:
 class Car
   attr_accessor :colors_mask # integer bitmask of record ids
   include EmbeddedRecord
-  embed_records :colors, :class => Color, :singular => :color
+  embed_records :colors
 end
 
 car = Car.new

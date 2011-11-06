@@ -70,14 +70,14 @@ describe "Class with EmbeddedRecord" do
   end
 
   it "#embed_record defines <name>, <name>_id, <name>_id= methods" do
-    @cls.embed_record :color, :class => Color
+    @cls.embed_record :color
     @cls.method_defined?(:color).must_equal true
     @cls.method_defined?(:color_id).must_equal true
     @cls.method_defined?(:color_id=).must_equal true
   end
 
   it "#embed_records defines <name>, <name>_ids, <name>_ids= methods" do
-    @cls.embed_records :colors, :class => Color, :singular => :color
+    @cls.embed_records :colors
     @cls.method_defined?(:colors).must_equal true
     @cls.method_defined?(:color_ids).must_equal true
     @cls.method_defined?(:color_ids=).must_equal true
