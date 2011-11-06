@@ -10,7 +10,7 @@ module EmbeddedRecord
   #   - :class - Class to embed
   #   - :scope - Boolean wheter to install ActiveRecord scope
   def embed_record(name, options = {})
-    klass = options[:class] || EmbeddedRecord.constantize(name)
+    klass = options[:class] || EmbeddedRecord.constantize(name.to_s)
     attr = "#{name}_mask"
     all = klass.all
 
@@ -50,8 +50,8 @@ module EmbeddedRecord
   #   end
   #
   def embed_records(name, options = {})
-    singular = options[:singular] || EmbeddedRecord.singularize(name)
-    klass = options[:class] || EmbeddedRecord.constantize(singular)
+    singular = options[:singular] || EmbeddedRecord.singularize(name.to_s)
+    klass = options[:class] || EmbeddedRecord.constantize(singular.to_s)
     all_ids = klass.all.map { |obj| obj.id }
     attr = "#{name}_mask"
 
@@ -105,7 +105,8 @@ private
 
   def self.constantize(str)
     if defined?(ActiveSupport::Inflector)
-      return ActiveSupport::Inflector.constantize(str)
+      return ActiveSupport::Inflector.constantize(
+        ActiveSupport::Inflector.classify(str))
     end
 
     # Stolen from ActiveSupport::Inflector

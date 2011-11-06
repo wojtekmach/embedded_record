@@ -86,7 +86,7 @@ end
 
 class Car
   include EmbeddedRecord
-  embed_record :color, :class => Color
+  embed_record :color
   attr_accessor :color_mask
 end
 
@@ -113,7 +113,7 @@ end
 
 class Shirt
   include EmbeddedRecord
-  embed_records :colors, :class => Color, :singular => "color"
+  embed_records :colors
   attr_accessor :colors_mask
 end
 
