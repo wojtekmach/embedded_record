@@ -75,7 +75,7 @@ p car.colors_mask       # => 3 (2**0 + 2**1)
 
 NullObject support:
 
-```
+```ruby
 class Color
   record nil, :name => "Blank"
 end
