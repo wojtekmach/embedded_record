@@ -77,7 +77,10 @@ p car.colors_mask       # => 3 (2**0 + 2**1)
 
 ## REQUIREMENTS:
 
-None
+Development:
+
+* rake
+* minitest >= 2.6
 
 ## INSTALL:
 
