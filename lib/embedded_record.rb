@@ -206,7 +206,7 @@ module EmbeddedRecord::Record
     def attribute(name)
       attributes << name
 
-      unless method_defined?(name)
+      if !method_defined?(name) || name == :id
         attr_accessor name
       end
     end
