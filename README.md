@@ -1,6 +1,4 @@
-# EmbeddedRecord
-
-[![Build Status](http://travis-ci.org/wojtekmach/embedded_record.png)](http://travis-ci.org/wojtekmach/embedded_record)
+# EmbeddedRecord [![Build Status](https://secure.travis-ci.org/wojtekmach/embedded_record.png)](http://travis-ci.org/wojtekmach/embedded_record)
 
 * http://github.com/wojtekmach/embedded_record
 
