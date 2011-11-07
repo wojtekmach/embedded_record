@@ -17,6 +17,8 @@ module EmbeddedRecord
     define_method name do
       if val = send(attr)
         klass.all[val]
+      elsif klass.null_record
+        klass.null_record
       end
     end
 
@@ -198,7 +200,26 @@ module EmbeddedRecord::Record
 
         record.send "#{k}=", v
       end
-      records[id] = record
+
+      if id == nil
+        @null_record = record
+      else
+        records[id] = record
+      end
+    end
+
+    ##
+    # Returns null record, a record which id is nil
+    #
+    # Example:
+    #
+    #   class Foo
+    #     record nil, :name => "Empty"
+    #   end
+    #
+    #   Foo.null_record.name # => "Empty"
+    def null_record
+      @null_record
     end
 
     ##

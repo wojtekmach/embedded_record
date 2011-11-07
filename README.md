@@ -73,6 +73,18 @@ p car.color_ids         # => [:red, :green]
 p car.colors_mask       # => 3 (2**0 + 2**1)
 ```
 
+NullObject support:
+
+```
+class Color
+  record nil, :name => "Blank"
+end
+
+Color.ids # => [:red, :green, :blue] # still the same
+
+Car.new.color.name # => "Blank" # No whiny nils!
+```
+
 ## REQUIREMENTS:
 
 Development:

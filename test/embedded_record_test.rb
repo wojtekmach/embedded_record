@@ -137,3 +137,47 @@ describe "Object embedding records" do
     @shirt.colors.must_equal [Color.find(:green), Color.find(:blue)]
   end
 end
+
+describe EmbeddedRecord do
+  before do
+    @cls = Class.new do
+      include EmbeddedRecord
+    end
+  end
+
+  describe "with embed_record and null record" do
+    before do
+      rec = Class.new do
+        include EmbeddedRecord::Record
+        attribute :name
+        record nil, :name => "Empty"
+      end
+
+      @cls.class_eval do
+        attr_accessor :foo_mask
+        embed_record :foo, :class => rec
+      end
+    end
+
+    it "#<name> when <name>_mask is nil returns null record" do
+      @cls.new.foo.name.must_equal "Empty"
+    end
+  end
+end
+
+describe EmbeddedRecord::Record do
+  before do
+    @cls = Class.new do
+      include EmbeddedRecord::Record
+      attribute :name
+    end
+  end
+
+  it "#record with nil acts as a null object" do
+    @cls.class_eval do
+      record nil, :name => "Empty"
+    end
+    @cls.null_record.name.must_equal "Empty"
+    @cls.all.must_equal []
+  end
+end
