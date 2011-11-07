@@ -202,6 +202,8 @@ module EmbeddedRecord::Record
       end
 
       if id == nil
+        def record.nil?; true end
+
         @null_record = record
       else
         records[id] = record
