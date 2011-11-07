@@ -2,7 +2,7 @@
 
 [![Build Status](http://travis-ci.org/wojtekmach/embedded_record.png)](http://travis-ci.org/wojtekmach/embedded_record)
 
-* http://github.com/wojtekmach/embedded\_record
+* http://github.com/wojtekmach/embedded_record
 
 ## DESCRIPTION:
 
