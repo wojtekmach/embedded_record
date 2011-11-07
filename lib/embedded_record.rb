@@ -161,7 +161,7 @@ module EmbeddedRecord::Record
     ##
     # Returns Array of records ids
     def ids
-      records.keys
+      @keys ||= []
     end
 
     ##
@@ -173,7 +173,7 @@ module EmbeddedRecord::Record
     ##
     # Returns all records
     def all
-      records.values
+      @records ||= []
     end
 
     ##
@@ -206,7 +206,8 @@ module EmbeddedRecord::Record
 
         @null_record = record
       else
-        records[id] = record
+        ids << id
+        all << record
       end
     end
 
@@ -232,12 +233,6 @@ module EmbeddedRecord::Record
       if !method_defined?(name) || name == :id
         attr_accessor name
       end
-    end
-
-  private
-
-    def records
-      @records ||= {}
     end
   end
 end
