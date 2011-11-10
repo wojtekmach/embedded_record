@@ -178,7 +178,6 @@ describe EmbeddedRecord::Record do
       record nil, :name => "Empty"
     end
     @cls.null_record.name.must_equal "Empty"
-    @cls.null_record.nil?.must_equal true
     @cls.all.must_equal []
   end
 end
