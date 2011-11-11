@@ -11,6 +11,11 @@ module EmbeddedRecord
   #   - :scope - Boolean wheter to install ActiveRecord scope
   def embed_record(name, options = {})
     klass = options[:class] || EmbeddedRecord.constantize(name.to_s)
+
+    unless klass.included_modules.include? Record
+      raise ArgumentError, "Class must include EmbeddedRecord::Record"
+    end
+
     attr = "#{name}_mask"
     all = klass.all
 
@@ -54,6 +59,11 @@ module EmbeddedRecord
   def embed_records(name, options = {})
     singular = options[:singular] || EmbeddedRecord.singularize(name.to_s)
     klass = options[:class] || EmbeddedRecord.constantize(singular.to_s)
+
+    unless klass.included_modules.include? Record
+      raise ArgumentError, "Class must include EmbeddedRecord::Record"
+    end
+
     all_ids = klass.all.map { |obj| obj.id }
     attr = "#{name}_mask"
 

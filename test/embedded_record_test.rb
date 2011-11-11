@@ -145,6 +145,13 @@ describe EmbeddedRecord do
       @cls.embed_record :color
       @cls.method_defined?(:color_id).must_equal true
     end
+
+    it "raises error when embedding class without Record module" do
+      cls = Class.new
+      lambda {
+        @cls.embed_record :foo, :class => cls
+      }.must_raise ArgumentError
+    end
   end
 
   describe "with embedded record" do
@@ -206,6 +213,13 @@ describe EmbeddedRecord do
     it "guesses Class based on the name" do
       @cls.embed_records :colors
       @cls.method_defined?(:color_ids).must_equal true
+    end
+
+    it "raises error when embedding class without Record module" do
+      cls = Class.new
+      lambda {
+        @cls.embed_records :foo, :class => cls
+      }.must_raise ArgumentError
     end
   end
 
