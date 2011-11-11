@@ -9,6 +9,8 @@ module EmbeddedRecord
   # Options:
   #   - :class - Class to embed
   #   - :scope - Boolean wheter to install ActiveRecord scope
+  #   - :mask_attr - Symbol attribute for storing bitmask.
+  #                  Defaults to <name>_mask
   def embed_record(name, options = {})
     klass = options[:class] || EmbeddedRecord.constantize(name.to_s)
 
@@ -16,7 +18,7 @@ module EmbeddedRecord
       raise ArgumentError, "Class must include EmbeddedRecord::Record"
     end
 
-    attr = "#{name}_mask"
+    attr = options[:mask_attr] || "#{name}_mask"
     all = klass.all
 
     define_method name do
@@ -49,6 +51,8 @@ module EmbeddedRecord
   # Options:
   #   - class - Class of record
   #   - singular - singular form of name
+  #   - mask_attr - Symbol attribute for storing bitmask.
+  #                 Defaults to <name>_mask
   #
   # Example:
   #
@@ -65,7 +69,7 @@ module EmbeddedRecord
     end
 
     all_ids = klass.all.map { |obj| obj.id }
-    attr = "#{name}_mask"
+    attr = options[:mask_attr] || "#{name}_mask"
 
     define_method "#{singular}_ids=" do |ids|
       type_method = embed_id_type_method(klass)

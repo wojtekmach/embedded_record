@@ -152,6 +152,20 @@ describe EmbeddedRecord do
         @cls.embed_record :foo, :class => cls
       }.must_raise ArgumentError
     end
+
+    it "allows to set :mask_attr" do
+      @cls.embed_record :foo, :class => @rec_class, :mask_attr => :val
+      @cls.class_eval do
+        attr_accessor :val
+      end
+
+      @rec_class.record :a
+      @rec_class.record :b
+      @obj = @cls.new
+      @obj.foo_id = :b
+      @obj.foo.id.must_equal :b
+      @obj.val.must_equal 1
+    end
   end
 
   describe "with embedded record" do
@@ -220,6 +234,22 @@ describe EmbeddedRecord do
       lambda {
         @cls.embed_records :foo, :class => cls
       }.must_raise ArgumentError
+    end
+
+    it "allows to set :mask_attr" do
+      @rec_class.record :a
+      @rec_class.record :b
+      @rec_class.record :c
+
+      @cls.embed_records :foos, :class => @rec_class, :mask_attr => :val
+      @cls.class_eval do
+        attr_accessor :val
+      end
+
+      @obj = @cls.new
+      @obj.foo_ids = [:a, :c]
+      @obj.foos.map(&:id).must_equal [:a, :c]
+      @obj.val.must_equal 2**0 + 2**2
     end
   end
 
