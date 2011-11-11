@@ -7,9 +7,9 @@ module EmbeddedRecord
 
   ##
   # Options:
-  #   - :class - Class to embed
-  #   - :scope - Boolean wheter to install ActiveRecord scope
-  #   - :mask_attr - Symbol attribute for storing bitmask.
+  #   - class - Class to embed
+  #   - scope - Boolean wheter to install ActiveRecord scope
+  #   - mask_attr - Symbol attribute for storing bitmask.
   #                  Defaults to <name>_mask
   def embed_record(name, options = {})
     klass = options[:class] || EmbeddedRecord.constantize(name.to_s)
