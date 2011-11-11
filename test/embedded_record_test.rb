@@ -57,6 +57,21 @@ describe EmbeddedRecord::Record do
     @cls.ids.must_equal [:one, :two]
   end
 
+  describe "::record" do
+    it "creates a new record" do
+      @cls.ids.must_equal []
+      @cls.record :one
+      @cls.ids.must_equal [:one]
+    end
+
+    it "raises error when id is not symbol, string, integer or nil" do
+      @cls.record 1
+      @cls.record :two
+      @cls.record "three"
+      lambda { @cls.record 1.0 }.must_raise ArgumentError
+    end
+  end
+
   describe "#find" do
     it "returns record with a given id" do
       @cls.record :one

@@ -116,7 +116,11 @@ module EmbeddedRecord
 private
 
   def embed_id_type_method(klass)
-    klass.ids.first.is_a?(Symbol) ? :to_sym : :to_s
+    case klass.ids.first
+    when Symbol then :to_sym
+    when Fixnum then :to_i
+    else :to_s
+    end
   end
 
   def self.constantize(str)
@@ -204,7 +208,13 @@ module EmbeddedRecord::Record
 
     ##
     # Defines a record with an id and Hash of attributes.
+    #
+    #   id - must be symbol, string, integer or nil for null record
     def record(id, attrs = {})
+      unless [Symbol, String, Fixnum, NilClass].include? id.class
+        raise ArgumentError, "id must be symbol, string, integer or nil"
+      end
+
       record = new
       record.send "id=", id
       attrs.each do |k, v|
