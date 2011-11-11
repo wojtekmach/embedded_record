@@ -228,9 +228,16 @@ module EmbeddedRecord::Record
       if id == nil
         @null_record = record
       else
+        @id_class ||= id.class
         ids << id
         all << record
       end
+    end
+
+    ##
+    # Returns class of id attribute or nil when no record is present
+    def id_class
+      @id_class ? @id_class : nil
     end
 
     ##

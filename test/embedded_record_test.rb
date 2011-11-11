@@ -57,6 +57,17 @@ describe EmbeddedRecord::Record do
     @cls.ids.must_equal [:one, :two]
   end
 
+  describe "::id_class" do
+    it "returns class of id attribute" do
+      @cls.record :one
+      @cls.id_class.must_equal Symbol
+    end
+
+    it "returns nil when no record is present" do
+      @cls.id_class.must_equal nil
+    end
+  end
+
   describe "::record" do
     it "creates a new record" do
       @cls.ids.must_equal []
@@ -64,10 +75,22 @@ describe EmbeddedRecord::Record do
       @cls.ids.must_equal [:one]
     end
 
+    it "accepts symbol as id" do
+      @cls.record(:one)
+      @cls.id_class.must_equal Symbol
+    end
+
+    it "accepts string as id" do
+      @cls.record "two"
+      @cls.id_class.must_equal String
+    end
+
+    it "accepts integer as id" do
+      @cls.record 3
+      @cls.id_class.must_equal Fixnum
+    end
+
     it "raises error when id is not symbol, string, integer or nil" do
-      @cls.record 1
-      @cls.record :two
-      @cls.record "three"
       lambda { @cls.record 1.0 }.must_raise ArgumentError
     end
   end
