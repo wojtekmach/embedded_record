@@ -193,6 +193,12 @@ describe EmbeddedRecord do
       @car.color_mask.must_equal 2
     end
 
+    it "#<name>_id= converts argument to id's type" do
+      @car.color_id = "blue"
+      @car.color_id.must_equal :blue
+      @car.color_mask.must_equal 2
+    end
+
     it "#<name>_id returns id of a record" do
       @car.color_mask = 2
       @car.color_id.must_equal :blue
