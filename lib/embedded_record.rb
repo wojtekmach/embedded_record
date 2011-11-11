@@ -19,7 +19,6 @@ module EmbeddedRecord
     end
 
     attr = options[:mask_attr] || "#{name}_mask"
-    all = klass.all
 
     define_method name do
       if val = send(attr)
@@ -68,10 +67,10 @@ module EmbeddedRecord
       raise ArgumentError, "Class must include EmbeddedRecord::Record"
     end
 
-    all_ids = klass.all.map { |obj| obj.id }
     attr = options[:mask_attr] || "#{name}_mask"
 
     define_method "#{singular}_ids=" do |ids|
+      all_ids = klass.all.map &:id
       type_method = embed_id_type_method(klass)
       ids = ids.map(&type_method)
       self.send "#{attr}=",
@@ -79,6 +78,7 @@ module EmbeddedRecord
     end
 
     define_method "#{singular}_ids" do
+      all_ids = klass.all.map &:id
       all_ids.reject { |r| ((send(attr) || 0) & 2**all_ids.index(r)).zero? }
     end
 
