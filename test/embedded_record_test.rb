@@ -140,15 +140,13 @@ describe EmbeddedRecord do
     @cls = Class.new do
       include EmbeddedRecord
     end
+
+    @rec_class = Class.new do
+      include EmbeddedRecord::Record
+    end
   end
 
   describe "::embed_record" do
-    before do
-      @rec_class = Class.new do
-        include EmbeddedRecord::Record
-      end
-    end
-
     it "defines <name>, <name>_id, <name>_id= methods" do
       @cls.embed_record :foo, :class => @rec_class
       @cls.method_defined?(:foo).must_equal true
@@ -188,15 +186,40 @@ describe EmbeddedRecord do
       @car = Car.new
     end
 
-    it "#<name>_id= sets the record mask" do
-      @car.color_id = :blue
-      @car.color_mask.must_equal 2
-    end
+    describe "#<name>_id" do
+      it "sets the record mask" do
+        @car.color_id = :blue
+        @car.color_mask.must_equal 2
+      end
 
-    it "#<name>_id= converts argument to id's type" do
-      @car.color_id = "blue"
-      @car.color_id.must_equal :blue
-      @car.color_mask.must_equal 2
+      describe "with argument that is not the same type as id" do
+        before do
+          tmp = @rec_class
+          @cls.class_eval do
+            embed_record :foo, :class => tmp
+            attr_accessor :foo_mask
+          end
+          @obj = @cls.new
+        end
+
+        it "converts argument when id is symbol" do
+          @rec_class.record :one
+          @obj.foo_id = "one"
+          @obj.foo_id.must_equal :one
+        end
+
+        it "converts argument when id is string" do
+          @rec_class.record "one"
+          @obj.foo_id = :one
+          @obj.foo_id.must_equal "one"
+        end
+
+        it "converts argument when id is integer" do
+          @rec_class.record 1
+          @obj.foo_id = "1"
+          @obj.foo_id.must_equal 1
+        end
+      end
     end
 
     it "#<name>_id returns id of a record" do
@@ -279,9 +302,16 @@ describe EmbeddedRecord do
       @obj = Shirt.new
     end
 
-    it "#<name>_ids= sets the mask" do
-      @obj.color_ids = [:red, :blue]
-      @obj.colors_mask.must_equal(2**0 + 2**2)
+    describe "#<name>_ids=" do
+      it "sets the mask" do
+        @obj.color_ids = [:red, :blue]
+        @obj.colors_mask.must_equal(2**0 + 2**2)
+      end
+
+      it "converts argument to id's type" do
+        @obj.color_ids = %w(red blue)
+        @obj.color_ids.must_equal [:red, :blue]
+      end
     end
 
     it "#<name>_ids returns ids of records" do
