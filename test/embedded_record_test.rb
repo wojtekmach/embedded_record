@@ -143,6 +143,12 @@ describe EmbeddedRecord::Record do
     end
   end
 
+  it "attributes are frozen" do
+    @cls.record 1, :name => "Hello"
+    rec = @cls.find(1)
+    lambda { rec.name << " World!" }.must_raise RuntimeError
+  end
+
   describe "#null_record" do
     it "returns nil if no null object is set" do
       @cls.null_record.must_equal nil

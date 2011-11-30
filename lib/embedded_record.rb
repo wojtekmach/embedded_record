@@ -222,7 +222,7 @@ module EmbeddedRecord::Record
           raise ArgumentError, "Atrribute '#{k}' not found"
         end
 
-        record.send "#{k}=", v
+        record.send "#{k}=", v.freeze
       end
 
       if id == nil
