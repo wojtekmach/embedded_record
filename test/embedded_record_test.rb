@@ -146,7 +146,7 @@ describe EmbeddedRecord::Record do
   it "attributes are frozen" do
     @cls.record 1, :name => "Hello"
     rec = @cls.find(1)
-    lambda { rec.name << " World!" }.must_raise RuntimeError
+    lambda { rec.name << " World!" }.must_raise RuntimeError, TypeError
   end
 
   describe "#null_record" do
