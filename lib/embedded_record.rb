@@ -154,7 +154,6 @@ end
 module EmbeddedRecord::Record
   def self.included(klass)
     klass.extend ClassMethods
-    klass.attribute :id
   end
 
   ##
@@ -214,6 +213,8 @@ module EmbeddedRecord::Record
       unless [Symbol, String, Fixnum, NilClass].include? id.class
         raise ArgumentError, "id must be symbol, string, integer or nil"
       end
+
+      raise RuntimeError, "id attribute not defined" unless attributes.include?(:id)
 
       record = new
       record.send "id=", id
