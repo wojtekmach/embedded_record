@@ -19,8 +19,9 @@ Basic embeddable record usage:
 ```ruby
 class Color
   include EmbeddedRecord::Record
-  attribute :name
-  attribute :hex
+  attribute :id, Symbol
+  attribute :name, String
+  attribute :hex, String
 
   record :red,   :name => "Red",   :hex => "#FF0000"
   record :green, :name => "Green", :hex => "#00FF00"
@@ -29,6 +30,7 @@ end
 
 p Color.ids # => [:red, :green, :blue]
 p Color.all # => [#<Color>, #<Color>, #<Color>]
+p Color.attribute_names # => [:id, :name, :hex]
 Color.first
 Color.last
 

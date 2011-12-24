@@ -1,3 +1,5 @@
+require "virtus"
+
 module EmbeddedRecord
   VERSION = "0.0.5"
 
@@ -154,6 +156,9 @@ end
 module EmbeddedRecord::Record
   def self.included(klass)
     klass.extend ClassMethods
+    klass.class_eval do
+      include Virtus
+    end
   end
 
   ##
@@ -169,10 +174,8 @@ module EmbeddedRecord::Record
   end
 
   module ClassMethods
-    ##
-    # Returns Array of record attributes
-    def attributes
-      @attributes ||= []
+    def attribute_names
+      attributes.map(&:name)
     end
 
     ##
@@ -210,16 +213,14 @@ module EmbeddedRecord::Record
     #
     #   id - must be symbol, string, integer or nil for null record
     def record(id, attrs = {})
-      unless [Symbol, String, Fixnum, NilClass].include? id.class
-        raise ArgumentError, "id must be symbol, string, integer or nil"
+      unless attribute_names.include?(:id)
+        raise RuntimeError, "id attribute not defined"
       end
-
-      raise RuntimeError, "id attribute not defined" unless attributes.include?(:id)
 
       record = new
       record.send "id=", id
       attrs.each do |k, v|
-        unless attributes.include? k
+        unless attribute_names.include? k
           raise ArgumentError, "Atrribute '#{k}' not found"
         end
 
@@ -229,16 +230,9 @@ module EmbeddedRecord::Record
       if id == nil
         @null_record = record
       else
-        @id_class ||= id.class
         ids << id
         all << record
       end
-    end
-
-    ##
-    # Returns class of id attribute or nil when no record is present
-    def id_class
-      @id_class ? @id_class : nil
     end
 
     ##
@@ -253,16 +247,6 @@ module EmbeddedRecord::Record
     #   Foo.null_record.name # => "Empty"
     def null_record
       @null_record
-    end
-
-    ##
-    # Defines a Symbol attribute for a record
-    def attribute(name)
-      attributes << name
-
-      if !method_defined?(name) || name == :id
-        attr_accessor name
-      end
     end
   end
 end
