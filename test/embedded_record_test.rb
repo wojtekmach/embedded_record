@@ -5,8 +5,8 @@ require "embedded_record"
 
 class Color
   include EmbeddedRecord::Record
-  attribute :id, Symbol
-  attribute :name, String
+  attribute :id
+  attribute :name
 
   record :red,   :name => "Red"
   record :green, :name => "Green"
@@ -29,14 +29,14 @@ describe EmbeddedRecord::Record do
   before do
     @cls = Class.new do
       include EmbeddedRecord::Record
-      attribute :id, Integer
-      attribute :name, String
+      attribute :id
+      attribute :name
     end
   end
 
-  it "::attribute_names returns names of attributes" do
-    @cls.attribute :val, String
-    @cls.attribute_names.must_equal [:id, :name, :val]
+  it "::attributes returns names pf attributes" do
+    @cls.attribute :val
+    @cls.attributes.must_equal [:id, :name, :val]
   end
 
   it "::all returns array of records" do
@@ -59,10 +59,42 @@ describe EmbeddedRecord::Record do
     @cls.ids.must_equal [:one, :two]
   end
 
-  it "::record creates a new record" do
-    @cls.ids.must_equal []
-    @cls.record :one
-    @cls.ids.must_equal [:one]
+  describe "::id_class" do
+    it "returns class of id attribute" do
+      @cls.record :one
+      @cls.id_class.must_equal Symbol
+    end
+
+    it "returns nil when no record is present" do
+      @cls.id_class.must_equal nil
+    end
+  end
+
+  describe "::record" do
+    it "creates a new record" do
+      @cls.ids.must_equal []
+      @cls.record :one
+      @cls.ids.must_equal [:one]
+    end
+
+    it "accepts symbol as id" do
+      @cls.record(:one)
+      @cls.id_class.must_equal Symbol
+    end
+
+    it "accepts string as id" do
+      @cls.record "two"
+      @cls.id_class.must_equal String
+    end
+
+    it "accepts integer as id" do
+      @cls.record 3
+      @cls.id_class.must_equal Fixnum
+    end
+
+    it "raises error when id is not symbol, string, integer or nil" do
+      lambda { @cls.record 1.0 }.must_raise ArgumentError
+    end
   end
 
   describe "#find" do
@@ -132,11 +164,6 @@ describe EmbeddedRecord::Record do
       @cls.all.wont_include @cls.null_record
     end
   end
-
-  it "#attributes returns Hash of attributes" do
-    @cls.record 1, :name => "Hello"
-    @cls.find(1).attributes.must_equal({ :id => 1, :name => "Hello" })
-  end
 end
 
 describe EmbeddedRecord do
@@ -147,7 +174,7 @@ describe EmbeddedRecord do
 
     @rec_class = Class.new do
       include EmbeddedRecord::Record
-      attribute :id, Symbol
+      attribute :id
     end
   end
 
@@ -244,8 +271,8 @@ describe EmbeddedRecord do
     describe "with null record" do
       it "#<name> returns null record when no record is set" do
         rec_class = Class.new(Color) do
-          attribute :id, Symbol
-          attribute :name, String
+          attribute :id
+          attribute :name
           record nil, :name => "Empty"
         end
 
@@ -263,7 +290,7 @@ describe EmbeddedRecord do
     before do
       @rec_class = Class.new do
         include EmbeddedRecord::Record
-        attribute :id, Symbol
+        attribute :id
       end
     end
 
