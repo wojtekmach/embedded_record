@@ -5,7 +5,6 @@ require "embedded_record"
 
 class Color
   include EmbeddedRecord::Record
-  attribute :id
   attribute :name
 
   record :red,   :name => "Red"
@@ -29,7 +28,6 @@ describe EmbeddedRecord::Record do
   before do
     @cls = Class.new do
       include EmbeddedRecord::Record
-      attribute :id
       attribute :name
     end
   end
@@ -174,7 +172,6 @@ describe EmbeddedRecord do
 
     @rec_class = Class.new do
       include EmbeddedRecord::Record
-      attribute :id
     end
   end
 
@@ -271,7 +268,6 @@ describe EmbeddedRecord do
     describe "with null record" do
       it "#<name> returns null record when no record is set" do
         rec_class = Class.new(Color) do
-          attribute :id
           attribute :name
           record nil, :name => "Empty"
         end
@@ -290,7 +286,6 @@ describe EmbeddedRecord do
     before do
       @rec_class = Class.new do
         include EmbeddedRecord::Record
-        attribute :id
       end
     end
 
