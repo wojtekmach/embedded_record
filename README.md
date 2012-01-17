@@ -89,8 +89,6 @@ Car.new.color.name # => "Blank" # No whiny nils!
 
 ## REQUIREMENTS:
 
-* virtus
-
 Development:
 
 * rake
