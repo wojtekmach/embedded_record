@@ -1,6 +1,6 @@
 # EmbeddedRecord [![Build Status](https://secure.travis-ci.org/wojtekmach/embedded_record.png)](http://travis-ci.org/wojtekmach/embedded_record)
 
-* http://github.com/wojtekmach/embedded_record
+## :warning: This repository is no longer maintained :warning:
 
 ## DESCRIPTION:
 
@@ -9,8 +9,6 @@ EmbeddedRecord is designed to do two things:
 * Define records on a Class
 * Embed one or many records (similiar to belongs\_to and
 has\_and\_belongs\_to\_many associations)
-* See example Rails app:
-  [EmbeddedRecordExample](https://github.com/wojtekmach/embedded_record_example)
 
 ## SYNOPSIS:
 
